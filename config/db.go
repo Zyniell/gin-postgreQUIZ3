@@ -11,8 +11,6 @@ import (
 var DB *sql.DB
 
 func ConnectDB() {
-	// Mengambil variabel environment dari Railway
-	// Pastikan PGDATABASE di Railway diisi: TokoBuku
 	host := os.Getenv("PGHOST")
 	port := os.Getenv("PGPORT")
 	user := os.Getenv("PGUSER")

@@ -11,11 +11,11 @@ func StartServer() *gin.Engine {
 	// Grouping routes untuk Buku
 	bukuRoute := r.Group("/buku")
 	{
-		bukuRoute.POST("/", controllers.CreateBuku)       // Menjadi: /buku/
-        bukuRoute.GET("/", controllers.GetAllBuku)        // Menjadi: /buku/
-        bukuRoute.GET("/:id", controllers.GetBukuByID)    // Menjadi: /buku/:id
-        bukuRoute.PUT("/:id", controllers.UpdateBuku)     // Menjadi: /buku/:id
-        bukuRoute.DELETE("/:id", controllers.DeleteBuku)  // Menjadi: /buku/:id
+		bukuRoute.POST("/buku", controllers.CreateBuku)
+        bukuRoute.GET("/buku", controllers.GetAllBuku)
+        bukuRoute.GET("/buku:id", controllers.GetBukuByID)
+        bukuRoute.PUT("/buku:id", controllers.UpdateBuku)
+        bukuRoute.DELETE("/buku:id", controllers.DeleteBuku)
 	}
 
 	//menambah route Kategori
