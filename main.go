@@ -5,23 +5,15 @@ import (
 	"quizz3-buku/config"
 	"quizz3-buku/routers"
 
-	"github.com/gin-gonic/gin"
+
 )
 
 func main() {
-	// Inisialisasi Database
+	// 1. Koneksi ke Database
 	config.ConnectDB()
 
-	router := gin.Default()
-
-	// Panggil Router
-	routes.BukuRoutes(router)
-
-	// Port untuk Railway
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	router.Run(":" + port)
+	// 2. Jalankan Server
+	r := routers.StartServer()
+	
+	r.Run(":" + os.Getenv("PORT"))
 }

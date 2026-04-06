@@ -1,38 +1,39 @@
 package config
 
 import (
-	"context"
+	"database/sql"
 	"fmt"
 	"os"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+	_ "github.com/lib/pq"
 )
 
-var DB *pgxpool.Pool
+var DB *sql.DB
 
 func ConnectDB() {
-	// Railway menyediakan env DATABASE_URL secara otomatis
-	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		host := os.Getenv("PGHOST")
-		port := os.Getenv("PGPORT")
-		user := os.Getenv("PGUSER")
-		pass := os.Getenv("PGPASSWORD")
-		dbname := os.Getenv("PGDATABASE")
+	// Mengambil variabel environment dari Railway
+	// Pastikan PGDATABASE di Railway diisi: TokoBuku
+	host := os.Getenv("PGHOST")
+	port := os.Getenv("PGPORT")
+	user := os.Getenv("PGUSER")
+	password := os.Getenv("PGPASSWORD")
+	dbname := os.Getenv("PGDATABASE")
 
-		if host != "" && dbname != "" {
-			dbURL = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, pass, host, port, dbname)
-		} else {
-			dbURL = "postgres://postgres:password@localhost:5432/TokoBuku"
-		}
-	}
+	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
 
 	var err error
-	DB, err = pgxpool.New(context.Background(), dbURL)
+	DB, err = sql.Open("postgres", psqlInfo)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Gagal koneksi ke database: %v\n", err)
-		os.Exit(1)
+		fmt.Printf("Error opening database: %v\n", err)
+		panic(err)
 	}
 
-	fmt.Println("Koneksi Database Berhasil!")
+	err = DB.Ping()
+	if err != nil {
+		fmt.Printf("Error connecting to database: %v\n", err)
+		panic(err)
+	}
+
+	fmt.Printf("Successfully connected to database: %s\n", dbname)
 }
