@@ -14,8 +14,17 @@ func ConnectDB() {
 	// Railway menyediakan env DATABASE_URL secara otomatis
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
-		// Fallback untuk lokal jika lupa set env
-		dbURL = "postgres://postgres:password@localhost:5432/TokoBuku"
+		host := os.Getenv("PGHOST")
+		port := os.Getenv("PGPORT")
+		user := os.Getenv("PGUSER")
+		pass := os.Getenv("PGPASSWORD")
+		dbname := os.Getenv("PGDATABASE")
+
+		if host != "" && dbname != "" {
+			dbURL = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, pass, host, port, dbname)
+		} else {
+			dbURL = "postgres://postgres:password@localhost:5432/TokoBuku"
+		}
 	}
 
 	var err error
